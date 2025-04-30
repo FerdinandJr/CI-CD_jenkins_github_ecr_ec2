@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    environment {
+        ECR_NAME = 'jenkins'
+        AWS_REGION = 'ap-southeast-1'
+        AWS_ACCOUNT_ID = '307946651028'
+        ECR_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_NAME}"
+        IMAGE_TAG = "latest"
+        GITHUB_REPO = 'https://github.com/FerdinandJr/labay_portfolio_v2.git'
+        AWS_CREDENTIALS_ID = "aws-creds-id"
+    }
+
+    stages {
+        stage('Clone from GitHub') {
+            steps {
+                git branch: 'main', url: "${GITHUB_REPO}"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${ECR_NAME}:${IMAGE_TAG} ."
+                }
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_REGION}") {
+                    sh """
+                    aws ecr get-login-password --region ${AWS_REGION} | \
+                    docker login --username AWS --password-stdin ${ECR_REPO}
+                    """
+                }
+            }
+        }
+
+        stage('Tag to ECR') {
+            steps {
+                script {
+                    sh "docker tag ${ECR_NAME}:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                script {
+                    sh "docker push ${ECR_REPO}:${IMAGE_TAG}"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

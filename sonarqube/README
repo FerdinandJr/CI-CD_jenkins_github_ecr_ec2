@@ -1,0 +1,13 @@
+#INSTALL SONARQUBE
+wget https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-community-edition/
+
+install unzip
+unzip the file
+cd bin
+cd linux
+./sonar.sh
+./sonar.sh console
+
+#PLUGIN
+sonarqube scanner
+ssh2 easy

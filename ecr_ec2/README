@@ -1,0 +1,17 @@
+# EC2 MACHINE INSTALL 
+DOCKER
+AWSCLI
+
+#PLUGINS
+SSH Agent Plugin
+
+#CREDENTIALS
+my-ssh-key.pem
+
+# EC2 ADD USER COMMAND
+#INSTALL DOCKER
+sudo usermod -aG docker ubuntu
+sudo reboot
+
+#GIVE ECR READ ROLES TO EC2
+AmazonEC2ContainerRegistryReadOnly

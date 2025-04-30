@@ -1,0 +1,14 @@
+#LOGIN ECR IN EC2
+aws configure
+
+#ROLES TO PUT IN THE KEYPAIR OF THE ECR CREDENTIALS
+AmazonEC2ContainerRegistryFullAccess
+
+#PLUGINS
+stage view
+docker
+docker pipeline
+aws steps
+aws ecr
+aws credentials
+aws SDK ECR

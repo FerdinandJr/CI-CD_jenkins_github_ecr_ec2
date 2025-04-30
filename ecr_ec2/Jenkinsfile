@@ -1,0 +1,48 @@
+pipeline {
+  agent any
+
+  environment {
+    ECR_NAME = 'jenkins'
+    AWS_REGION = 'ap-southeast-1'
+    ECR_URL = "307946651028.dkr.ecr.ap-southeast-1.amazonaws.com/${ECR_NAME}"
+    IMAGE_TAG = "3"
+    REMOTE_USER = "ubuntu"
+    REMOTE_HOST = "ec2-3-1-213-244.ap-southeast-1.compute.amazonaws.com"
+    SSH_CREDENTIALS_ID = "my-ec2-ssh-key"
+    AWS_CREDENTIALS_ID = "aws-creds-id"
+  }
+
+  stages {
+    stage('Authenticate and Deploy') {
+      steps {
+        script {
+          // AWS ECR login from Jenkins
+          withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, region: AWS_REGION)]) {
+            sh """
+              aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URL}
+            """
+          }
+
+          // SSH into EC2 and perform actions
+          sshagent(credentials: [SSH_CREDENTIALS_ID]) {
+            sh """
+              ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} <<EOF
+                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URL}
+                docker pull ${ECR_URL}:${IMAGE_TAG}
+                docker stop my-app || true
+                docker rm my-app || true
+                docker run -d -p 80:80 --name my-app ${ECR_URL}:${IMAGE_TAG}
+EOF
+            """
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+}
