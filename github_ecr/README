@@ -1,10 +1,12 @@
-#LOGIN ECR IN EC2
-aws configure
+# GITHUB TO ECR JOB PIPELINE
 
-#ROLES TO PUT IN THE KEYPAIR OF THE ECR CREDENTIALS
+## LOGIN ECR IN EC2 (optional)
+1. aws configure
+
+## ROLES TO PUT IN THE KEYPAIR OF THE ECR CREDENTIALS
 AmazonEC2ContainerRegistryFullAccess
 
-#PLUGINS
+## PLUGINS
 stage view
 docker
 docker pipeline
