@@ -3,6 +3,8 @@
 ## LOGIN ECR IN EC2 (optional)
 1. aws configure
 
+## CREATE USER IN IAM 
+
 ## ROLES TO PUT IN THE KEYPAIR OF THE ECR CREDENTIALS
 AmazonEC2ContainerRegistryFullAccess
 
