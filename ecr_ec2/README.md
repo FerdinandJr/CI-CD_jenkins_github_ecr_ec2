@@ -1,8 +1,10 @@
 # ECR TO EC2 JOB PIPELINE
 
 ## EC2 MACHINE INSTALL 
+```bash
 DOCKER
 AWSCLI
+```
 
 ## PLUGINS
 SSH Agent Plugin
@@ -12,8 +14,10 @@ my-ssh-key.pem (keypair)
 
 ## INSTALL DOCKER
 ## EC2 ADD UBUNTU USER COMMAND TO DOCKER
+```bash
 sudo usermod -aG docker ubuntu
 sudo reboot
+```
 
 ## GIVE ECR READ ROLES TO EC2 (IAM ROLE)
 AmazonEC2ContainerRegistryReadOnly
